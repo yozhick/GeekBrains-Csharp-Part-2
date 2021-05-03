@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Asteroids.Properties;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
@@ -23,7 +24,7 @@ namespace Asteroids
 
         public virtual void Draw()
         {
-            Game.Buffer.Graphics.DrawEllipse(Pens.White, Pos.X, Pos.Y, Size.Width, Size.Height);
+            Game.Buffer.Graphics.DrawImage(Resources.meteorBrown_big1, Pos.X, Pos.Y, Size.Width, Size.Height);
         }
 
         public virtual void Update()
