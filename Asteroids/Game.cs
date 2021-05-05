@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Asteroids.Properties;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
@@ -24,6 +25,7 @@ namespace Asteroids
             _context = BufferedGraphicsManager.Current;
             Width = form.ClientSize.Width;
             Height = form.ClientSize.Height;
+            form.BackgroundImage = Resources.background;
             Buffer = _context.Allocate(g, new Rectangle(0, 0, Width, Height));
 
             Load();
@@ -43,7 +45,8 @@ namespace Asteroids
         public static void Draw()
         {
             Buffer.Graphics.Clear(Color.Black);
-            Buffer.Graphics.FillEllipse(Brushes.Red, new Rectangle(100, 100, 200, 200));
+            Buffer.Graphics.DrawImage(Resources.background, 0, 0, Width, Height);         
+            Buffer.Graphics.DrawImage(Resources.planet, new Rectangle(100, 100, 200, 200));
 
             foreach (Asteroid asteroid in _asteroids)
                 asteroid.Draw();
@@ -69,7 +72,8 @@ namespace Asteroids
             _stars = new Asteroid[20];
             for (int i = 0; i < _stars.Length; i++)
             {
-                _stars[i] = new Star(new Point(600, i * 40 + 10), new Point(-i - 1, -i - 1), new Size(5, 5));
+                var size = random.Next(10, 20);
+                _stars[i] = new Star(new Point(600, i * 40 + 10), new Point(-i - 1, -i - 1), new Size(size, size));
             }
         }
 
