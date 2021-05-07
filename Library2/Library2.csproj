@@ -47,11 +47,5 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Service Include="{94E38DFF-614B-4cbd-B67C-F211BB35CE8B}" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Library1\Library1.csproj">
-      <Project>{d6c60404-c030-4291-89ed-156ebe5b779a}</Project>
-      <Name>Library1</Name>
-    </ProjectReference>
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
