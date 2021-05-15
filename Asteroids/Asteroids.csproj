@@ -59,6 +59,7 @@
     <Compile Include="GameObject.cs" />
     <Compile Include="IGameBattlefieldView.cs" />
     <Compile Include="ImagedGameObject.cs" />
+    <Compile Include="OutOfBounds.cs" />
     <Compile Include="OutOfBoundsData.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

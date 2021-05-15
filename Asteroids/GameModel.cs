@@ -36,9 +36,11 @@ namespace Asteroids
         {
             switch (e.KeyCode)
             {
+                case Keys.W:
                 case Keys.Up:
                     Up();
                     break;
+                case Keys.S:
                 case Keys.Down:
                     Down();
                     break;
@@ -50,12 +52,24 @@ namespace Asteroids
 
         private void Up()
         {
-
+            var battleShipRectangle = BattleShip.Rectangle;
+            battleShipRectangle.Y -= 10;
+            var outOfBounds = OutOfBounds.Calculate(battleShipRectangle, BattleField);
+            if (outOfBounds == 0)
+            {
+                BattleShip.SetPosition(battleShipRectangle.Location); 
+            }
         }
 
         private void Down()
         {
-
+            var battleShipRectangle = BattleShip.Rectangle;
+            battleShipRectangle.Y += 10;
+            var outOfBounds = OutOfBounds.Calculate(battleShipRectangle, BattleField);
+            if (outOfBounds == 0)
+            {
+                BattleShip.SetPosition(battleShipRectangle.Location);
+            }
         }
 
         private void Shot()
@@ -74,7 +88,7 @@ namespace Asteroids
             foreach (var gameObject in AllGameObjects)
             {
                 gameObject.Update();
-                var outOfBounds = GameObject.OutOfBounds(gameObject, BattleField);
+                var outOfBounds = OutOfBounds.Calculate(gameObject.Rectangle, BattleField);
                 gameObject.Redirect(outOfBounds);                
             }
         }

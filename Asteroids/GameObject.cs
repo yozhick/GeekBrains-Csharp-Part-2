@@ -35,17 +35,5 @@ namespace Asteroids
         public abstract void Update();
         public abstract void Destroy();
 
-        public static OutOfBoundsData OutOfBounds(GameObject gameObject, Rectangle rectangle)
-        {
-            OutOfBoundsData outOfBoundsData = OutOfBoundsData.None;
-
-            if (gameObject.Position.X < rectangle.Left || gameObject.Position.X > rectangle.Right)
-                outOfBoundsData |= OutOfBoundsData.X;
-
-            if (gameObject.Position.Y < rectangle.Top || gameObject.Position.Y > rectangle.Bottom)
-                outOfBoundsData |= OutOfBoundsData.Y;
-
-            return outOfBoundsData;
-        }
     }
 }

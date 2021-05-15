@@ -18,9 +18,6 @@ namespace Asteroids
 
         public override void Update()
         {
-            // Приходится создавать новый экземпляр структуры, т.к. не даёт присвоить значение свойству структуры (ошибка CS1612).
-            // Может быть, есть способ лучше?
-
             Position = new Point(Position.X + Direction.X, Position.Y + Direction.Y);
         }
 

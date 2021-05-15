@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Asteroids
 {
-    enum OutOfBoundsData
+    public enum OutOfBoundsData
     {
         None = 0,
         X = 1,
