@@ -11,16 +11,17 @@ namespace Asteroids
 {
     class GameModel
     {
-        private IGameBattlefieldView GameView { get; set; }
-        private List<GameObject> AllGameObjects { get; set; } = new List<GameObject>();
+        private IGameView GameView { get; set; }
         private Random Random { get; set; } = new Random();
-        private Rectangle BattleField;
         private BattleShip BattleShip { get; set; }
+        private BattleField BattleField;
 
-        public GameModel(IGameBattlefieldView gameView)
+        public GameModel(IGameView gameView)
         {
             GameView = gameView;
-            BattleField = new Rectangle(0, 0, gameView.Width, gameView.Height);
+            var battleFieldRectangle = new Rectangle(0, 0, gameView.Width, gameView.Height);
+            BattleField = new BattleField(battleFieldRectangle);
+
             GameView.KeyDown += GameView_KeyDown;
 
             InitializeGameObjects();
@@ -54,7 +55,7 @@ namespace Asteroids
         {
             var battleShipRectangle = BattleShip.Rectangle;
             battleShipRectangle.Y -= 10;
-            var outOfBounds = OutOfBounds.Calculate(battleShipRectangle, BattleField);
+            var outOfBounds = OutOfBounds.Calculate(battleShipRectangle, BattleField.Rectangle);
             if (outOfBounds == 0)
             {
                 BattleShip.SetPosition(battleShipRectangle.Location); 
@@ -65,7 +66,7 @@ namespace Asteroids
         {
             var battleShipRectangle = BattleShip.Rectangle;
             battleShipRectangle.Y += 10;
-            var outOfBounds = OutOfBounds.Calculate(battleShipRectangle, BattleField);
+            var outOfBounds = OutOfBounds.Calculate(battleShipRectangle, BattleField.Rectangle);
             if (outOfBounds == 0)
             {
                 BattleShip.SetPosition(battleShipRectangle.Location);
@@ -74,7 +75,21 @@ namespace Asteroids
 
         private void Shot()
         {
+            var bulletImage = Resources.laserRed011;
 
+            var bulletPosition = new Point(
+                BattleShip.Rectangle.Right,
+                BattleShip.Rectangle.Top + BattleShip.Rectangle.Height / 2 - bulletImage.Height / 2);   
+            
+            var bullet = new Bullet(
+                bulletPosition,
+                new Point(25, 0),
+                new Size(bulletImage.Width, bulletImage.Height))
+            {
+                Image = Resources.laserRed011
+            };
+
+            BattleField.AllGameObjects.Add(bullet);
         }
 
         private void Timer_Tick(object sender, EventArgs e)
@@ -85,10 +100,10 @@ namespace Asteroids
 
         private void Update()
         {
-            foreach (var gameObject in AllGameObjects)
+            foreach (var gameObject in BattleField.AllGameObjects)
             {
                 gameObject.Update();
-                var outOfBounds = OutOfBounds.Calculate(gameObject.Rectangle, BattleField);
+                var outOfBounds = OutOfBounds.Calculate(gameObject.Rectangle, BattleField.Rectangle);
                 gameObject.Redirect(outOfBounds);                
             }
         }
@@ -97,7 +112,7 @@ namespace Asteroids
         {
             GameView.BufferedGraphics.Graphics.Clear(Color.Black);            
 
-            foreach(var gameObject in AllGameObjects)
+            foreach(var gameObject in BattleField.AllGameObjects)
             {
                 gameObject.Draw(GameView.BufferedGraphics.Graphics);
             }
@@ -121,7 +136,7 @@ namespace Asteroids
                 Image = background
             };
 
-            AllGameObjects.Add(gameObject);
+            BattleField.AllGameObjects.Add(gameObject);
         }
 
         private void InitializePlanet()
@@ -131,7 +146,7 @@ namespace Asteroids
                 Image = Resources.planet
             };
 
-            AllGameObjects.Add(planet);
+            BattleField.AllGameObjects.Add(planet);
         }
 
         private void InitializeAsteroids(int count)
@@ -144,7 +159,7 @@ namespace Asteroids
                     Image = Resources.meteorBrown_big1
                 };
 
-                AllGameObjects.Add(asteroid);
+                BattleField.AllGameObjects.Add(asteroid);
             }
         }
         private void InitializeStars(int count)
@@ -159,7 +174,7 @@ namespace Asteroids
                     Image = Resources.star2
                 };
 
-                AllGameObjects.Add(asteroid);
+                BattleField.AllGameObjects.Add(asteroid);
             }
         }
 
@@ -171,7 +186,7 @@ namespace Asteroids
                 Image = Resources.ship
             };
 
-            AllGameObjects.Add(BattleShip);
+            BattleField.AllGameObjects.Add(BattleShip);
         }
 
     }

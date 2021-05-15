@@ -14,7 +14,7 @@ namespace Asteroids
         [STAThread]
         static void Main()
         {
-            var gameBattleField = new GameBattlefield(800, 600);
+            var gameBattleField = new Game(800, 600);
 
             Application.Run(gameBattleField);
         }

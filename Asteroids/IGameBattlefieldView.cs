@@ -8,12 +8,12 @@ using System.Windows.Forms;
 
 namespace Asteroids
 {
-    interface IGameBattlefieldView
+    interface IGameView
     {
         int Width { get; }
         int Height { get; }
         BufferedGraphics BufferedGraphics { get; }
-        Image BackgroundImage { set; }
+
         event KeyEventHandler KeyDown;
         
     }
