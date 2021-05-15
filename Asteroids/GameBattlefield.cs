@@ -22,6 +22,8 @@ namespace Asteroids
             Initialize();
 
             GameModel = new GameModel(this);
+
+            
         }
 
         private void Initialize()

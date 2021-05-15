@@ -17,5 +17,10 @@ namespace Asteroids
         {
             Position = new Point(Position.X + Direction.X, Position.Y + Direction.Y);
         }
+
+        public override void Redirect(OutOfBoundsData outOfBoundsData)
+        {
+            
+        }
     }
 }

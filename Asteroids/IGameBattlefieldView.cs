@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace Asteroids
 {
@@ -12,7 +13,8 @@ namespace Asteroids
         int Width { get; }
         int Height { get; }
         BufferedGraphics BufferedGraphics { get; }
-
         Image BackgroundImage { set; }
+        event KeyEventHandler KeyDown;
+        
     }
 }

@@ -12,12 +12,17 @@ namespace Asteroids
     class GameModel
     {
         private IGameBattlefieldView GameView { get; set; }
-        private List<GameObject> AllGameObjects = new List<GameObject>();
-        private Random Random = new Random();
+        private List<GameObject> AllGameObjects { get; set; } = new List<GameObject>();
+        private Random Random { get; set; } = new Random();
+        private Rectangle BattleField;
+        private BattleShip BattleShip { get; set; }
 
         public GameModel(IGameBattlefieldView gameView)
         {
             GameView = gameView;
+            BattleField = new Rectangle(0, 0, gameView.Width, gameView.Height);
+            GameView.KeyDown += GameView_KeyDown;
+
             InitializeGameObjects();
 
             // To do: сделать обновление экрана отдельным таймером
@@ -25,6 +30,37 @@ namespace Asteroids
             timer.Interval = 60;
             timer.Tick += Timer_Tick;
             timer.Start();
+        }
+
+        private void GameView_KeyDown(object sender, KeyEventArgs e)
+        {
+            switch (e.KeyCode)
+            {
+                case Keys.Up:
+                    Up();
+                    break;
+                case Keys.Down:
+                    Down();
+                    break;
+                case Keys.Space:
+                    Shot();
+                    break;
+            }
+        }
+
+        private void Up()
+        {
+
+        }
+
+        private void Down()
+        {
+
+        }
+
+        private void Shot()
+        {
+
         }
 
         private void Timer_Tick(object sender, EventArgs e)
@@ -38,13 +74,8 @@ namespace Asteroids
             foreach (var gameObject in AllGameObjects)
             {
                 gameObject.Update();
-
-                // To do: вынести логику перенаправления полёта в отдельное место
-                if (gameObject.Position.X < 0 || gameObject.Position.X > GameView.Width)
-                    gameObject.Direction = new Point(-gameObject.Direction.X, gameObject.Direction.Y);
-
-                if (gameObject.Position.Y < 0 || gameObject.Position.Y > GameView.Height)
-                    gameObject.Direction = new Point(gameObject.Direction.X, -gameObject.Direction.Y);
+                var outOfBounds = GameObject.OutOfBounds(gameObject, BattleField);
+                gameObject.Redirect(outOfBounds);                
             }
         }
 
@@ -62,48 +93,72 @@ namespace Asteroids
 
         private void InitializeGameObjects()
         {
-            // To do: Разбить всё на отдельные методы.
-            
-            GameObject gameObject = new GameBackground(new Point(), new Point(), new Size(GameView.Width, GameView.Height))
+            InitializeGameBackground(Resources.background);
+            InitializePlanet();
+            InitializeAsteroids(15);
+            InitializeStars(25);
+            InitializeBattleShip();
+        }
+
+        private void InitializeGameBackground(Image background)
+        {
+            var gameObject = new GameBackground(new Point(), new Point(), new Size(GameView.Width, GameView.Height))
             {
-                Image = Resources.background
+                Image = background
             };
 
             AllGameObjects.Add(gameObject);
+        }
 
-            gameObject = new GameBackground(new Point(100, 100), new Point(), new Size(200, 200))
+        private void InitializePlanet()
+        {
+            var planet = new GameBackground(new Point(100, 100), new Point(), new Size(200, 200))
             {
                 Image = Resources.planet
             };
 
-            AllGameObjects.Add(gameObject);
+            AllGameObjects.Add(planet);
+        }
 
-            for (int i = 0; i < 15; i++)
+        private void InitializeAsteroids(int count)
+        {
+            for (int i = 0; i < count; i++)
             {
                 var size = Random.Next(10, 50);
-                gameObject = new Asteroid(new Point(600, i * 20 + 10), new Point(-i - 1, -i - 1), new Size(size, size))
+                var asteroid = new Asteroid(new Point(600, i * 20 + 10), new Point(-i - 1, -i - 1), new Size(size, size))
                 {
                     Image = Resources.meteorBrown_big1
                 };
 
-                AllGameObjects.Add(gameObject);
-
-                gameObject = new Star(new Point(600, i * 40 + 10), new Point(-i - 1, -i - 1), new Size(5, 5))
+                AllGameObjects.Add(asteroid);
+            }
+        }
+        private void InitializeStars(int count)
+        {
+            for (int i = 0; i < count; i++)
+            {
+                var size = Random.Next(10, 20);
+                var asteroid = new Star(new Point(600, i * 20 + 10),
+                                        new Point(Random.Next(-1, 1), Random.Next(-1, 1)),
+                                        new Size(size, size))
                 {
-                    Image = Resources.star1
+                    Image = Resources.star2
                 };
 
-                AllGameObjects.Add(gameObject);
-
-                gameObject = new Bullet(new Point(0, GameView.Height / 2), new Point(25, 0), new Size(54, 9))
-                {
-                    Image = Resources.laserRed011
-                };
-
-                AllGameObjects.Add(gameObject);
-            }            
+                AllGameObjects.Add(asteroid);
+            }
         }
 
+        private void InitializeBattleShip()
+        {
+            var position = new Point(60, GameView.Height / 2);
+            BattleShip = new BattleShip(position, new Point(0, 0), new Size(37, 50))
+            {
+                Image = Resources.ship
+            };
+
+            AllGameObjects.Add(BattleShip);
+        }
 
     }
 }
