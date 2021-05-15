@@ -15,10 +15,8 @@ namespace Asteroids
         public event EventHandler<CollisionEventArgs> Collision;
         public bool DeleteAfterCollision { get; set; }
 
-        public CollisionCalculator(List<GameObject> objectList, List<GameObject> targetList, bool deleteAfterCollision)
+        public CollisionCalculator(bool deleteAfterCollision)
         {
-            ObjectList = objectList;
-            TargetList = targetList;
             DeleteAfterCollision = deleteAfterCollision;
         }
 

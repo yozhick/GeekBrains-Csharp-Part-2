@@ -15,6 +15,8 @@ namespace Asteroids
         private Random Random { get; set; } = new Random();
         private BattleShip BattleShip { get; set; }
         private BattleField BattleField;
+        private CollisionCalculator BulletAsteroidCollisionCalculator { get; set; } = new CollisionCalculator(true);
+
 
         public GameModel(IGameView gameView)
         {
@@ -90,6 +92,7 @@ namespace Asteroids
             };
 
             BattleField.AllGameObjects.Add(bullet);
+            BulletAsteroidCollisionCalculator.AddObject(bullet);
         }
 
         private void Timer_Tick(object sender, EventArgs e)
@@ -106,6 +109,9 @@ namespace Asteroids
                 var outOfBounds = OutOfBounds.Calculate(gameObject.Rectangle, BattleField.Rectangle);
                 gameObject.Redirect(outOfBounds);                
             }
+
+            var collisionedObjects = BulletAsteroidCollisionCalculator?.CalculateCollision();
+            collisionedObjects.ForEach(p => BattleField.AllGameObjects.Remove(p));
         }
 
         public void Draw()
@@ -160,6 +166,7 @@ namespace Asteroids
                 };
 
                 BattleField.AllGameObjects.Add(asteroid);
+                BulletAsteroidCollisionCalculator.AddTarget(asteroid);
             }
         }
         private void InitializeStars(int count)
